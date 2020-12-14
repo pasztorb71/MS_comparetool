@@ -15,8 +15,21 @@ def compareFiles(f1, f2):
         line2 = f2.readline()
         if not line1 or not line2:
             return 0
-            break
         if line1 != line2:
             return cnt
-            break
         cnt += 1
+
+def compareBlockNamesInfiles(f1, f2):
+    # A függvény blokkok neveit hasonlítja össze a fájlokban.
+    # A blokk kezdetét a "block <blokknév> start" jelzi.
+    # A blokk végét a "block <blokknév> end" jelzi.
+    # Nem vizsgálja a blokkok tartalmát.
+    # A függvény egy listát ad visssza, amely két listát tartalmaz.
+    # Az első lista azokat a blokkneveket tartalmazza amelyek csak az első fájlban vannak meg,
+    # a második azokat a blokkneveket amelyek csak a második fájlban vannak meg.
+    # Ha a két fájl ugyanazokat a blokkneveket tartalmazza, akkor két üres listát ad vissza.
+
+    f1MinusF2 = []
+    f2MinusF1 = []
+
+    return [f1MinusF2, f2MinusF1]
