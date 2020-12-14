@@ -9,6 +9,14 @@ def compareFiles(f1, f2):
     # első fájl eltérő sora
     # <második fájl neve>
     # második fájl eltérő sora
-
-    diff = 0
-    return diff
+    cnt = 1
+    while True:
+        line1 = f1.readline()
+        line2 = f2.readline()
+        if not line1 or not line2:
+            return 0
+            break
+        if line1 != line2:
+            return cnt
+            break
+        cnt += 1
