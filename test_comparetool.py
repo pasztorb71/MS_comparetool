@@ -24,7 +24,7 @@ class Test_test_comparetool(unittest.TestCase):
         res = compareBlockNamesInfiles(f1,f2)
         f1.close()
         f2.close()
-        self.assertEqual(({'B'}, {'C'}), res)
+        self.assertEqual([['B'], ['C']], res)
 
 if __name__ == '__main__':
     unittest.main()
