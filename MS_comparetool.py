@@ -1,14 +1,14 @@
 
 def compareFiles(f1, f2):
-    # A függvény összehasonlítja a két szövegfájl tartalmát.
-    # Ha nincsen különbség 0-val tér vissza.
-    # Különbség esetén az elsõ különbséget tartalmazó sor számával tér vissza.
-    # A fájlok elsõ sora az 1-es sorszám.
-    # Különbség esetén kiírja a következõt:
-    # <elsõ fájl neve>
-    # elsõ fájl eltérõ sora
-    # <második fájl neve>
-    # második fájl eltérõ sora
+    # A fÃ¼ggvÃ©ny Ã¶sszehasonlÃ­tja a kÃ©t szÃ¶vegfÃ¡jl tartalmÃ¡t.
+    # Ha nincsen kÃ¼lÃ¶nbsÃ©g 0-val tÃ©r vissza.
+    # KÃ¼lÃ¶nbsÃ©g esetÃ©n az elsÅ‘ kÃ¼lÃ¶nbsÃ©get tartalmazÃ³ sor szÃ¡mÃ¡val tÃ©r vissza.
+    # A fÃ¡jlok elsÅ‘ sora az 1-es sorszÃ¡m.
+    # KÃ¼lÃ¶nbsÃ©g esetÃ©n kiÃ­rja a kÃ¶vetkezÅ‘t:
+    # <elsÅ‘ fÃ¡jl neve>
+    # elsÅ‘ fÃ¡jl eltÃ©rÅ‘ sora
+    # <mÃ¡sodik fÃ¡jl neve>
+    # mÃ¡sodik fÃ¡jl eltÃ©rÅ‘ sora
 
     diff = 0
     return diff
