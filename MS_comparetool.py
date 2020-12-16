@@ -29,7 +29,32 @@ def compareBlockNamesInfiles(f1, f2):
     # a második azokat a blokkneveket amelyek csak a második fájlban vannak meg.
     # Ha a két fájl ugyanazokat a blokkneveket tartalmazza, akkor két üres listát ad vissza.
 
-    f1MinusF2 = []
-    f2MinusF1 = []
+    list1 = []
+    list2 = []
+    line1_started_blocks = []
+    line2_started_blocks = []
+    while True:
+        line1 = f1.readline()
+        line2 = f2.readline()
+        get_blocks(line1, line1_started_blocks, list1)
+        get_blocks(line2, line2_started_blocks, list2)
+
+        if not line1 and not line2:
+            f1MinusF2 = [x for x in list1 if x not in list2]
+            f2MinusF1 = [x for x in list2 if x not in list1]
+            break;
 
     return [f1MinusF2, f2MinusF1]
+
+def get_blocks(line, list_sblocks, list_to_add):
+    x = line.split()
+    if len(x) >= 3:
+        if x[2] and x[0] == "block" and x[2] == "start":
+            list_sblocks += x[1]
+        if x[2] and x[0] == "block" and x[2] == "end":
+            if list_sblocks[-1] == x[1]:
+                list_sblocks.pop()
+                list_to_add.append(x[1])
+            else:
+                print("wrong block encapsulation!")
+
