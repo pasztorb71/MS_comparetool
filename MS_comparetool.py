@@ -31,13 +31,20 @@ def compareBlockNamesInfiles(f1, f2):
 
     list1 = []
     list2 = []
-    line1_started_blocks = []
-    line2_started_blocks = []
+    file1_started_blocks = []
+    file2_started_blocks = []
     while True:
         line1 = f1.readline()
         line2 = f2.readline()
-        get_blocks(line1, line1_started_blocks, list1)
-        get_blocks(line2, line2_started_blocks, list2)
+#        get_blocks(line1, file1_started_blocks, list1)
+#        get_blocks(line2, file2_started_blocks, list2)
+
+        x = get_closed_block_name(line1, file1_started_blocks)
+        if x:
+            list1.append(x)
+        x = get_closed_block_name(line2, file2_started_blocks)
+        if x:
+            list2.append(x)
 
         if not line1 and not line2:
             f1MinusF2 = [x for x in list1 if x not in list2]
@@ -50,7 +57,7 @@ def get_blocks(line, list_sblocks, list_to_add):
     x = line.split()
     if len(x) >= 3:
         if x[2] and x[0] == "block" and x[2] == "start":
-            list_sblocks += x[1]
+            list_sblocks.append(x[1])
         if x[2] and x[0] == "block" and x[2] == "end":
             if list_sblocks[-1] == x[1]:
                 list_sblocks.pop()
@@ -58,3 +65,16 @@ def get_blocks(line, list_sblocks, list_to_add):
             else:
                 print("wrong block encapsulation!")
 
+def get_closed_block_name(line, list_sblocks):
+#returns block name if the block reached its end
+    x = line.split()
+    if len(x) >= 3:
+        if x[2] and x[0] == "block" and x[2] == "start":
+            list_sblocks.append(x[1])
+        if x[2] and x[0] == "block" and x[2] == "end":
+            if list_sblocks[-1] == x[1]:
+                list_sblocks.pop()
+                return x[1]
+            else:
+                print("wrong block encapsulation!")
+    return None
