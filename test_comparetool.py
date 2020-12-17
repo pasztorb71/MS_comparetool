@@ -26,10 +26,13 @@ class Test_test_comparetool(unittest.TestCase):
         f2.close()
         self.assertEqual([['B'], ['C']], res)
 
-    def test_get_blocks(self):
-        # A get_blocks egy függvény, ezért kell return#
-        list_sblocks = get_blocks('block A start\n',)
-        self.assertEqual(['A'], list_blocks)
+    def test_compareBlockNamesInfiles1(self):
+        f1 = open('testdata/block_a.txt', 'r')
+        f2 = open('testdata/block_b.txt', 'r')
+        res = compareBlockNamesInfiles(f1,f2)
+        f1.close()
+        f2.close()
+        self.assertEqual([['B'], ['C']], res)
 
 if __name__ == '__main__':
     unittest.main()
