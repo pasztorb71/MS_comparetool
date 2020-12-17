@@ -26,5 +26,10 @@ class Test_test_comparetool(unittest.TestCase):
         f2.close()
         self.assertEqual([['B'], ['C']], res)
 
+    def test_get_blocks(self):
+        # A get_blocks egy függvény, ezért kell return#
+        list_sblocks = get_blocks('block A start\n',)
+        self.assertEqual(['A'], list_blocks)
+
 if __name__ == '__main__':
     unittest.main()
