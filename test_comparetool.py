@@ -10,7 +10,7 @@ class Test_test_comparetool(unittest.TestCase):
         f2.close()
         self.assertEqual(2, res)
 
-    def test_comparefilesdifferentNumberOfRows(self):
+    def test_comparefiles_differentNumberOfRows(self):
         f1 = open('testdata/b.txt', 'r')
         f2 = open('testdata/c.txt', 'r')
         res = compareFiles(f1,f2)

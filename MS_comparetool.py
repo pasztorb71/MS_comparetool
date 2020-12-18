@@ -81,5 +81,5 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
         block_error = True
 
     if block_error == True:
-        print("there are unfinished blocks!")
+        print("There are block errors!")
     return blocks
