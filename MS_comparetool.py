@@ -54,28 +54,3 @@ def get_blocks_of_file(fh):
         if not line:
             break
     return retlist
-
-
-
-def compareBlockNamesInfiles1(f1, f2):
-  list1 = f1.readlines()
-  blocks1 = get_blocks1(list1)
-  list1 = f2.readlines()
-  blocks2 = get_blocks1(list1)
-  f1MinusF2 = list(set(blocks1) - set(blocks2))
-  f2MinusF1 = list(set(blocks2) - set(blocks1))
-  return [f1MinusF2, f2MinusF1]
-
-def get_blocks1(list1):
-   startedblocks = []
-   endedblocks = []
-   blocks = []
-   for line in list1:
-       if re.match('block .* start', line):
-           startedblocks.append(line.split()[2])
-       if re.match('block .* end', line):
-           endedblocks.append(line.split()[2])
-   for i in startedblocks:
-       if i in endedblocks:
-           blocks.append(i)
-   return blocks
