@@ -1,4 +1,5 @@
 
+
 def compareFiles(f1, f2):
     # A függvény összehasonlítja a két szövegfájl tartalmát.
     # Ha nincsen különbség 0-val tér vissza.
@@ -54,3 +55,31 @@ def get_blocks_of_file(fh):
         if not line:
             break
     return retlist
+
+def getBlockNames(fh, block_start_pattern, block_end_pattern):
+    started_blocks = []
+    blocks = []
+    block_error = False
+    while True:
+        line = fh.readline()
+        name = line.partition(block_start_pattern)[-1]
+        if (name):                                          #block started
+            name = name.replace("[", "")
+            name = name.replace("]", "")
+            name = name.replace(" ", "")
+            name = name.replace("\n", "")
+            started_blocks.append(name)
+        if line.find(block_end_pattern) != -1:              #block ended
+            if len(started_blocks):
+                blocks.append(started_blocks.pop())
+            else:
+                block_error = True
+        if not line:
+            break
+
+    if len(started_blocks):
+        block_error = True
+
+    if block_error == True:
+        print("there are unfinished blocks!")
+    return blocks
