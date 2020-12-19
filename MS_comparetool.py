@@ -60,8 +60,7 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
     started_blocks = []
     blocks = []
     block_error = False
-    while True:
-        line = fh.readline()
+    for line in fh.readlines():
         name = line.partition(block_start_pattern)[-1]
         if (name):                                          #block started
             name = name.replace("[", "")
@@ -74,9 +73,6 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
                 blocks.append(started_blocks.pop())
             else:
                 block_error = True
-        if not line:
-            break
-
     if len(started_blocks):
         block_error = True
 

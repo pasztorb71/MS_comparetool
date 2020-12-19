@@ -27,12 +27,12 @@ class Test_test_comparetool(unittest.TestCase):
         self.assertEqual([['B'], ['C']], res)
 
     def test_get_blocknames_in_file(self):
-        f1 = open('testdata/stopred_procs.sql', 'r')
+        f1 = open('testdata/stored_procs.sql', 'r')
         block_start_pattern = 'CREATE PROCEDURE'
-        block_end_pattern = 'END;'
+        block_end_pattern = 'GO'
         res = getBlockNames(f1, block_start_pattern, block_end_pattern)
         f1.close()
-        self.assertEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers'], res)
+        self.assertEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError'], res)
 
 
 if __name__ == '__main__':
