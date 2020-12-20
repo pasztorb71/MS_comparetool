@@ -34,6 +34,16 @@ class Test_test_comparetool(unittest.TestCase):
         f1.close()
         self.assertEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError'], res)
 
+    def test_getBlockNames_exception(self):
+        f1 = open('testdata/stored_procs_exc.sql', 'r')
+        block_start_pattern = 'CREATE PROCEDURE'
+        block_end_pattern = 'GO'
+        try :
+            res = getBlockNames(f1, block_start_pattern, block_end_pattern)
+            self.assertTrue(1==0)
+        except BlockError:
+            self.assertTrue(1==1)
+        f1.close()
 
 if __name__ == '__main__':
     unittest.main()

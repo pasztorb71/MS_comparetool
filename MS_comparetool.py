@@ -56,6 +56,9 @@ def get_blocks_of_file(fh):
             break
     return retlist
 
+class BlockError(Exception):
+    pass
+
 def getBlockNames(fh, block_start_pattern, block_end_pattern):
     started_blocks = []
     blocks = []
@@ -63,19 +66,11 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
     for line in fh.readlines():
         name = line.partition(block_start_pattern)[-1]
         if (name):                                          #block started
-            name = name.replace("[", "")
-            name = name.replace("]", "")
-            name = name.replace(" ", "")
-            name = name.replace("\n", "")
+            name = name.replace("[", "").replace("]", "").replace(" ", "").replace("\n", "")
             started_blocks.append(name)
         if line.find(block_end_pattern) != -1:              #block ended
             if len(started_blocks):
                 blocks.append(started_blocks.pop())
             else:
-                block_error = True
-    if len(started_blocks):
-        block_error = True
-
-    if block_error == True:
-        print("There are block errors!")
+                raise BlockError("There are block errors!")
     return blocks
