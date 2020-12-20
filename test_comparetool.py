@@ -2,6 +2,7 @@ import unittest
 from MS_comparetool import *
 
 class Test_test_comparetool(unittest.TestCase):
+
     def test_comparefiles_sameNumberOfRows(self):
         f1 = open('testdata/a.txt', 'r')
         f2 = open('testdata/b.txt', 'r')
@@ -45,5 +46,19 @@ class Test_test_comparetool(unittest.TestCase):
             self.assertTrue(1==1)
         f1.close()
 
+    def test_connect_database(self):
+        conn = connect_database()
+        self.assertIsNotNone(conn)
+
+    def test_query_database(self):
+        conn = connect_database()
+        self.assertIsNotNone(conn)
+        res=query_database(conn, "SELECT SPECIFIC_SCHEMA + '.' + SPECIFIC_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'")
+        self.assertListEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 
+                              'dbo.uspGetManagerEmployees', 'dbo.uspGetWhereUsedProductID', 
+                              'dbo.uspLogError', 'dbo.uspPrintError', 'dbo.uspSearchCandidateResumes', 
+                              'HumanResources.uspUpdateEmployeePersonalInfo', 'HumanResources.uspUpdateEmployeeHireInfo', 
+                              'HumanResources.uspUpdateEmployeeLogin'], 
+                             res)
 if __name__ == '__main__':
     unittest.main()

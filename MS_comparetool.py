@@ -1,4 +1,4 @@
-
+import pyodbc
 
 def compareFiles(f1, f2):
     # A függvény összehasonlítja a két szövegfájl tartalmát.
@@ -74,3 +74,15 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
             else:
                 raise BlockError("There are block errors!")
     return blocks
+
+def connect_database():
+    f = open('.parameters', 'r', encoding='utf8')
+    connectdata = f.readline();
+    conn = pyodbc.connect(connectdata)
+    return conn
+
+def query_database(conn, sqlstmt):
+    cursor = conn.cursor()
+    cursor.execute(sqlstmt)
+    return [x[0] for x in cursor]
+
