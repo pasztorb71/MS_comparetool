@@ -30,7 +30,7 @@ class Test_test_comparetool(unittest.TestCase):
     def test_get_blocknames_in_file(self):
         f1 = open('testdata/stored_procs.sql', 'r')
         block_start_pattern = 'CREATE PROCEDURE'
-        block_end_pattern = 'GO'
+        block_end_pattern = 'end;'
         res = getBlockNames(f1, block_start_pattern, block_end_pattern)
         f1.close()
         self.assertEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError'], res)

@@ -64,19 +64,23 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
     blocks = []
     block_error = False
     for line in fh.readlines():
-        name = line.partition(block_start_pattern)[-1]
-        if (name):                                          #block started
+        pos_start = line.lower().find(block_start_pattern.lower())
+        pos_end = line.lower().find(block_end_pattern.lower())
+        if pos_start != -1 and is_separate(line, pos_start, len(block_start_pattern)) == True:          #block started
+            name = line[len(block_start_pattern):].split()[0]
             name = name.replace("[", "").replace("]", "").replace(" ", "").replace("\n", "")
             started_blocks.append(name)
-        if line.find(block_end_pattern) != -1:              #block ended
+        if pos_end != -1  and is_separate(line, pos_end, len(block_end_pattern)) == True:               #block ended
             if len(started_blocks):
                 blocks.append(started_blocks.pop())
-            else:
-                raise BlockError("There are block errors!")
+            #else:
+            #    raise BlockError("Block ended with no start!")
+    if len(started_blocks):
+        raise BlockError("Block has no end!")
     return blocks
 
 def connect_database():
-    f = open('.parameters', 'r', encoding='utf8')
+    f = open('./parameters', 'r', encoding='utf8')
     connectdata = f.readline();
     conn = pyodbc.connect(connectdata)
     return conn
@@ -85,4 +89,15 @@ def query_database(conn, sqlstmt):
     cursor = conn.cursor()
     cursor.execute(sqlstmt)
     return [x[0] for x in cursor]
+
+def is_separate(text, i, length):
+    if i > 0 and text[i-1:1].isalnum() == True:
+        return False
+    if len(text) > i + length and text[i+length].isalnum() == True:
+        return False
+    return True
+    
+
+
+
 
