@@ -38,7 +38,7 @@ class Test_test_comparetool(unittest.TestCase):
     def test_getBlockNames_exception(self):
         f1 = open('testdata/stored_procs_exc.sql', 'r')
         block_start_pattern = 'CREATE PROCEDURE'
-        block_end_pattern = 'GO'
+        block_end_pattern = 'end;'
         try :
             res = getBlockNames(f1, block_start_pattern, block_end_pattern)
             self.assertTrue(1==0)
@@ -60,5 +60,22 @@ class Test_test_comparetool(unittest.TestCase):
                               'HumanResources.uspUpdateEmployeePersonalInfo', 'HumanResources.uspUpdateEmployeeHireInfo', 
                               'HumanResources.uspUpdateEmployeeLogin'], 
                              res)
+
+    def test_get_blocks_of_file(self):
+        #Írtam leírást a get_blocks_of_file eljáráshoz az elvárt működésről
+        res = {'dbo.uspGetBillOfMaterials':['1', '2'], 'dbo.uspGetEmployeeManagers':[], 'dbo.uspLogError':['a', 'a', 'a', 'a', 'a', 'a']}
+        f = open('testdata/stored_procs.sql', 'r')
+        res = get_blocks_of_file(f)
+        expected = ['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError']
+        actual = [x for x in res]
+        self.assertListEqual(expected, actual)
+        expected = [36, 32, 55] 
+        actual = list(map(len, res.values()))
+        self.assertListEqual(expected, actual)
+
+    def test_is_separate(self):
+        #Ezt még ki kell dolgoznom.
+        pass
+
 if __name__ == '__main__':
     unittest.main()
