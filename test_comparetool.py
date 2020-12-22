@@ -63,7 +63,6 @@ class Test_test_comparetool(unittest.TestCase):
 
     def test_get_blocks_of_file(self):
         #Írtam leírást a get_blocks_of_file eljáráshoz az elvárt működésről
-        res = {'dbo.uspGetBillOfMaterials':['1', '2'], 'dbo.uspGetEmployeeManagers':[], 'dbo.uspLogError':['a', 'a', 'a', 'a', 'a', 'a']}
         f = open('testdata/stored_procs.sql', 'r')
         res = get_blocks_of_file(f)
         expected = ['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError']
