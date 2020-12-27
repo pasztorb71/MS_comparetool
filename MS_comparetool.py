@@ -42,23 +42,31 @@ def get_blocks_of_file(fh):
     #De a neve alapján van értelme
     #Ezt át kellene írni, hogy dictionary-t adjon vissza, ahol a kulcs a blokk neve, 
     #a hozzá tartozó érték, pedig a blokk tartalma listában
+    block_start_pattern = 'CREATE PROCEDURE'
+    block_end_pattern = 'end;'
     started_blocks = []
-    retlist = []
-    while True:
-        line = fh.readline()
-        x = line.split()
-        if len(x) >= 3:
-            if x[2] and x[0] == "block" and x[2] == "start":
-                started_blocks.append(x[1])
-            if x[2] and x[0] == "block" and x[2] == "end":
-                if started_blocks[-1] == x[1]:
-                    started_blocks.pop()
-                    retlist.append(x[1])
-                else:
-                    print("wrong block encapsulation!")
-        if not line:
-            break
-    return retlist
+    blocks = []
+    my_dict = {}
+    block_error = False
+    for idx, line in enumerate(fh.readlines()):
+        pos_start = line.lower().find(block_start_pattern.lower())
+        pos_end = line.lower().find(block_end_pattern.lower())
+        if pos_start != -1 and is_separate(line, pos_start, len(block_start_pattern)) is True:          #block started
+            name = line[len(block_start_pattern):].split()[0]
+            name = name.replace("[", "").replace("]", "").replace(" ", "").replace("\n", "")
+            started_blocks.append(name)
+            my_dict[name] = []
+        if len(started_blocks):
+            my_dict[started_blocks[-1]].append(line)
+        if pos_end != -1 and is_separate(line, pos_end, len(block_end_pattern)) is True:               #block ended
+            if len(started_blocks):
+                blocks.append(started_blocks.pop())
+            else:
+                raise BlockError("Block ended with no start!")
+
+    if len(started_blocks):
+        raise BlockError("Block has no end!")
+    return my_dict
 
 class BlockError(Exception):
     pass
@@ -67,7 +75,7 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
     started_blocks = []
     blocks = []
     block_error = False
-    for idx,line in enumerate(fh.readlines()):
+    for idx, line in enumerate(fh.readlines()):
         pos_start = line.lower().find(block_start_pattern.lower())
         pos_end = line.lower().find(block_end_pattern.lower())
         if pos_start != -1 and is_separate(line, pos_start, len(block_start_pattern)) == True:          #block started
@@ -85,7 +93,7 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
 
 def connect_database():
     f = open('.parameters', 'r', encoding='utf8')
-    connectdata = f.readline();
+    connectdata = f.readline()
     conn = pyodbc.connect(connectdata)
     return conn
 
@@ -96,7 +104,7 @@ def query_database(conn, sqlstmt):
 
 def is_separate(text, i, length):
     a = text[i-1:1]
-    if i > 0 and text[i-1:1].isalnum() == True:
+    if i > 0 and text[i-1].isalnum() == True:
         return False
     if len(text) > i + length and text[i+length].isalnum() == True:
         return False
