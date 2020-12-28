@@ -19,14 +19,6 @@ class Test_test_comparetool(unittest.TestCase):
         f2.close()
         self.assertEqual(2, res)
 
-    def test_compareBlockNamesInfiles(self):
-        f1 = open('testdata/block_a.txt', 'r')
-        f2 = open('testdata/block_b.txt', 'r')
-        res = compareBlockNamesInfiles(f1,f2)
-        f1.close()
-        f2.close()
-        self.assertEqual([['B'], ['C']], res)
-
     def test_get_blocknames_in_file(self):
         f1 = open('testdata/stored_procs.sql', 'r')
         block_start_pattern = 'CREATE PROCEDURE'
@@ -65,6 +57,7 @@ class Test_test_comparetool(unittest.TestCase):
         #Írtam leírást a get_blocks_of_file eljáráshoz az elvárt működésről
         f = open('testdata/stored_procs.sql', 'r')
         res = get_blocks_of_file(f)
+        f.close()
         expected = ['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError']
         actual = [x for x in res]
         self.assertListEqual(expected, actual)
@@ -75,6 +68,20 @@ class Test_test_comparetool(unittest.TestCase):
     def test_is_separate(self):
         #Ezt még ki kell dolgoznom.
         pass
+
+    def test_get_procedure_from_db(self):
+        #Csináld meg a már üresen létrehozott get_procedure_from_db eljárást,
+        #ami paraméterként kap egy db connection-t és egy tárolt eljárás nevét.ű
+        #A tárolt eljárás neve <séma.név> formátumban kell megadva legyen. pl : 'dbo.uspGetBillOfMaterials'
+        #Kérdezze le az adatbázisból a kapott tárolt eljárás szövegét és adja vissza listában!
+        #A szöveg elején és végén ne legyenek felesleges üres sorok.
+        #A lekérdezést beleírtam a get_procedure_from_db eljárásba.
+        conn = connect_database()
+        proc_text = get_procedure_from_db(conn, 'dbo.uspGetBillOfMaterials')
+        actual = len(proc_text)
+        expected = 36
+        self.assertEqual(expected, actual)
+
 
 if __name__ == '__main__':
     unittest.main()

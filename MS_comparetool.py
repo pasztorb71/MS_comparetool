@@ -38,9 +38,7 @@ def compareBlockNamesInfiles(f1, f2):
 
 
 def get_blocks_of_file(fh):
-    #Úgy látom, hogy ezt már nem használjuk.
-    #De a neve alapján van értelme
-    #Ezt át kellene írni, hogy dictionary-t adjon vissza, ahol a kulcs a blokk neve, 
+    #Ezt át kellene írni, hogy dictionary-t adjon vissza, ahol a kulcs a blokk neve,
     #a hozzá tartozó érték, pedig a blokk tartalma listában
     block_start_pattern = 'CREATE PROCEDURE'
     block_end_pattern = 'end;'
@@ -94,6 +92,7 @@ def getBlockNames(fh, block_start_pattern, block_end_pattern):
 def connect_database():
     f = open('.parameters', 'r', encoding='utf8')
     connectdata = f.readline()
+    f.close()
     conn = pyodbc.connect(connectdata)
     return conn
 
@@ -103,11 +102,15 @@ def query_database(conn, sqlstmt):
     return [x[0] for x in cursor]
 
 def is_separate(text, i, length):
-    a = text[i-1:1]
     if i > 0 and text[i-1].isalnum() == True:
         return False
     if len(text) > i + length and text[i+length].isalnum() == True:
         return False
     return True
-    
+
+def get_procedure_from_db(conn, procname):
+    sqlstmt = """SELECT * FROM STRING_SPLIT(REPLACE(OBJECT_DEFINITION(object_id(procname)), 
+                 char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"""
+    res = query_database(conn, sqlstmt)
+
 
