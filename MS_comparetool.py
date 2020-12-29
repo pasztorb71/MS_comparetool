@@ -113,4 +113,5 @@ def get_procedure_from_db(conn, procname):
                  char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"""
     res = query_database(conn, sqlstmt)
 
-
+if __name__ == '__main__':
+    print(is_separate("h el_ lo world", 2, 2))

@@ -43,7 +43,7 @@ BEGIN
     FROM [BOM_cte] b
     GROUP BY b.[ComponentID], b.[ComponentDesc], b.[ProductAssemblyID], b.[BOMLevel], b.[RecursionLevel], b.[StandardCost], b.[ListPrice]
     ORDER BY b.[BOMLevel], b.[ProductAssemblyID], b.[ComponentID]
-    OPTION (MAXRECURSION 25) 
+    OPTION (MAXRECURSION 25) --end;
 END;
 GO
 
