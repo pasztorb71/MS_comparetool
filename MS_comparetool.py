@@ -109,7 +109,16 @@ def is_separate(text, i, length):
     return True
 
 def get_procedure_from_db(conn, procname):
-    #sqlstmt_orig = "SELECT * FROM STRING_SPLIT(REPLACE(OBJECT_DEFINITION(object_id('dbo.uspGetBillOfMaterials')), char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"
+    """
+    A tárolt eljárás neve <séma.név> formátumban kell megadva legyen. pl : 'dbo.uspGetBillOfMaterials'
+    Kérdezze le az adatbázisból a kapott tárolt eljárás szövegét és adja vissza listában!
+    A szöveg elején és végén ne legyenek felesleges üres sorok.
+    A lekérdezést beleírtam a get_procedure_from_db eljárásba.
+
+    :param conn:
+    :param procname:
+    :return:
+    """
     sqlstmt1 = "SELECT * FROM STRING_SPLIT(REPLACE(OBJECT_DEFINITION(object_id('"
     sqlstmt2 = "')), char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"
     sqlstmt = sqlstmt1 + procname + sqlstmt2
@@ -121,6 +130,30 @@ def get_procedure_from_db(conn, procname):
     while len(res[i]) == 0:     #remove empty items from end
         res.pop(i)
     return res
+
+def get_procedure_from_file(f, procname):
+    """
+    Az eljárás ugyanúgy működik mint a get_procedure_from_db eljárás,
+    azonban nem adatbázisból hanem a kapott fájlból veszi ki a forrást
+    és visszaadja listában.
+    :param f:
+    :param procname:
+    :return list of rows:
+    """
+    return []
+
+def compare_procedures(proc_file, proc_db):
+    """
+    Az eljárás összehasonlítja a kapott két listát. Ha nincs különbség, akkor üres listát ad vissza.
+    Különbség esetén két listaelemet ad vissza. Az első az első lista első eltérő sora,
+    a második a második lista első eltérő sora.
+
+    :param proc_file:
+    :param proc_db:
+    :return diff:
+    """
+    diff = []
+    return diff
 
 if __name__ == '__main__':
     print(is_separate("h el_ lo world", 2, 2))

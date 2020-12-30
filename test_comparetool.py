@@ -1,6 +1,7 @@
 import unittest
 from MS_comparetool import *
 
+
 class Test_test_comparetool(unittest.TestCase):
 
     def test_comparefiles_sameNumberOfRows(self):
@@ -70,18 +71,28 @@ class Test_test_comparetool(unittest.TestCase):
         pass
 
     def test_get_procedure_from_db(self):
-        #Csináld meg a már üresen létrehozott get_procedure_from_db eljárást,
-        #ami paraméterként kap egy db connection-t és egy tárolt eljárás nevét.
-        #A tárolt eljárás neve <séma.név> formátumban kell megadva legyen. pl : 'dbo.uspGetBillOfMaterials'
-        #Kérdezze le az adatbázisból a kapott tárolt eljárás szövegét és adja vissza listában!
-        #A szöveg elején és végén ne legyenek felesleges üres sorok.
-        #A lekérdezést beleírtam a get_procedure_from_db eljárásba.
         conn = connect_database()
         proc_text = get_procedure_from_db(conn, 'dbo.uspGetBillOfMaterials')
         actual = len(proc_text)
         expected = 36
         self.assertEqual(expected, actual)
-        #self.assertEqual(1,1)
+
+    def test_get_procedure_from_file(self):
+        f = open('testdata/stored_procs.sql', 'r')
+        proc_text = get_procedure_from_file(f, 'dbo.uspGetBillOfMaterials')
+        f.close()
+        actual = len(proc_text)
+        expected = 36
+        self.assertEqual(expected, actual)
+
+    def test_compare_procedures(self):
+        f = open('testdata/stored_procs.sql', 'r')
+        proc_file = get_procedure_from_file(f, 'dbo.uspGetBillOfMaterials')
+        f.close()
+        conn = connect_database()
+        proc_db = get_procedure_from_db(conn, 'dbo.uspGetBillOfMaterials')
+        actual = compare_procedures(proc_file, proc_db)
+        self.assertTrue(actual) #Vagyis az eredmény nem üres lista
 
 
 if __name__ == '__main__':
