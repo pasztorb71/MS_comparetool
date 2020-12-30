@@ -71,7 +71,7 @@ class Test_test_comparetool(unittest.TestCase):
 
     def test_get_procedure_from_db(self):
         #Csináld meg a már üresen létrehozott get_procedure_from_db eljárást,
-        #ami paraméterként kap egy db connection-t és egy tárolt eljárás nevét.ű
+        #ami paraméterként kap egy db connection-t és egy tárolt eljárás nevét.
         #A tárolt eljárás neve <séma.név> formátumban kell megadva legyen. pl : 'dbo.uspGetBillOfMaterials'
         #Kérdezze le az adatbázisból a kapott tárolt eljárás szövegét és adja vissza listában!
         #A szöveg elején és végén ne legyenek felesleges üres sorok.
@@ -81,6 +81,7 @@ class Test_test_comparetool(unittest.TestCase):
         actual = len(proc_text)
         expected = 36
         self.assertEqual(expected, actual)
+        #self.assertEqual(1,1)
 
 
 if __name__ == '__main__':

@@ -102,16 +102,25 @@ def query_database(conn, sqlstmt):
     return [x[0] for x in cursor]
 
 def is_separate(text, i, length):
-    if i > 0 and text[i-1].isalnum() == True:
+    if i > 0 and text[i-1:i-1+1].isspace() is False:
         return False
-    if len(text) > i + length and text[i+length].isalnum() == True:
+    if len(text) > i + length and text[i+length:i+length+1].isspace() is False:
         return False
     return True
 
 def get_procedure_from_db(conn, procname):
-    sqlstmt = """SELECT * FROM STRING_SPLIT(REPLACE(OBJECT_DEFINITION(object_id(procname)), 
-                 char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"""
+    #sqlstmt_orig = "SELECT * FROM STRING_SPLIT(REPLACE(OBJECT_DEFINITION(object_id('dbo.uspGetBillOfMaterials')), char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"
+    sqlstmt1 = "SELECT * FROM STRING_SPLIT(REPLACE(OBJECT_DEFINITION(object_id('"
+    sqlstmt2 = "')), char(13) + Char(10), NCHAR(9999)), NCHAR(9999))"
+    sqlstmt = sqlstmt1 + procname + sqlstmt2
     res = query_database(conn, sqlstmt)
+    i = 0
+    while len(res[i]) == 0:     #remove empty items from start
+        res.pop(i)
+    i = -1
+    while len(res[i]) == 0:     #remove empty items from end
+        res.pop(i)
+    return res
 
 if __name__ == '__main__':
     print(is_separate("h el_ lo world", 2, 2))
