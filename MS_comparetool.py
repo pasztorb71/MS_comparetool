@@ -140,7 +140,14 @@ def get_procedure_from_file(f, procname):
     :param procname:
     :return list of rows:
     """
-    return []
+    dict_procnames = {}
+    list_procname = []
+    dict_procnames = get_blocks_of_file(f)
+    for key in dict_procnames:
+        if key == procname:
+            list_procname = dict_procnames[key].copy()
+            #list_procname = dict_procnames.items()
+    return list_procname
 
 def compare_procedures(proc_file, proc_db):
     """
@@ -153,6 +160,14 @@ def compare_procedures(proc_file, proc_db):
     :return diff:
     """
     diff = []
+    i = 0
+    while True:
+        if proc_file[i] != proc_db[i]:
+            diff.append(proc_file[i])
+            diff.append(proc_db[i])
+            break
+        else:
+            i += 1
     return diff
 
 if __name__ == '__main__':
