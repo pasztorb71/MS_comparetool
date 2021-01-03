@@ -1,52 +1,19 @@
 import unittest
 from MS_comparetool import *
+from database import Db
 
 
+db = Db()
 class Test_test_comparetool(unittest.TestCase):
 
-    def test_comparefiles_sameNumberOfRows(self):
-        f1 = open('testdata/a.txt', 'r')
-        f2 = open('testdata/b.txt', 'r')
-        res = compareFiles(f1,f2)
-        f1.close()
-        f2.close()
-        self.assertEqual(2, res)
-
-    def test_comparefiles_differentNumberOfRows(self):
-        f1 = open('testdata/b.txt', 'r')
-        f2 = open('testdata/c.txt', 'r')
-        res = compareFiles(f1,f2)
-        f1.close()
-        f2.close()
-        self.assertEqual(2, res)
-
-    def test_get_blocknames_in_file(self):
-        f1 = open('testdata/stored_procs.sql', 'r')
-        block_start_pattern = 'CREATE PROCEDURE'
-        block_end_pattern = 'end;'
-        res = getBlockNames(f1, block_start_pattern, block_end_pattern)
-        f1.close()
-        self.assertEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError'], res)
-
-    def test_getBlockNames_exception(self):
-        f1 = open('testdata/stored_procs_exc.sql', 'r')
-        block_start_pattern = 'CREATE PROCEDURE'
-        block_end_pattern = 'end;'
-        try :
-            res = getBlockNames(f1, block_start_pattern, block_end_pattern)
-            self.assertTrue(1==0)
-        except BlockError:
-            self.assertTrue(1==1)
-        f1.close()
-
     def test_connect_database(self):
-        conn = connect_database()
+        conn = db.connect_database()
         self.assertIsNotNone(conn)
 
     def test_query_database(self):
-        conn = connect_database()
+        conn = db.conn
         self.assertIsNotNone(conn)
-        res=query_database(conn, "SELECT SPECIFIC_SCHEMA + '.' + SPECIFIC_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'")
+        res = db.query_database("SELECT SPECIFIC_SCHEMA + '.' + SPECIFIC_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE = 'PROCEDURE'")
         self.assertListEqual(['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 
                               'dbo.uspGetManagerEmployees', 'dbo.uspGetWhereUsedProductID', 
                               'dbo.uspLogError', 'dbo.uspPrintError', 'dbo.uspSearchCandidateResumes', 
@@ -71,8 +38,9 @@ class Test_test_comparetool(unittest.TestCase):
         pass
 
     def test_get_procedure_from_db(self):
-        conn = connect_database()
-        proc_text = get_procedure_from_db(conn, 'dbo.uspGetBillOfMaterials')
+
+        conn = db.connect_database()
+        proc_text = db.get_procedure('dbo.uspGetBillOfMaterials')
         actual = len(proc_text)
         expected = 36
         self.assertEqual(expected, actual)
@@ -89,8 +57,8 @@ class Test_test_comparetool(unittest.TestCase):
         f = open('testdata/stored_procs.sql', 'r')
         proc_file = get_procedure_from_file(f, 'dbo.uspGetBillOfMaterials')
         f.close()
-        conn = connect_database()
-        proc_db = get_procedure_from_db(conn, 'dbo.uspGetBillOfMaterials')
+        conn = db.conn
+        proc_db = db.get_procedure('dbo.uspGetBillOfMaterials')
         actual = compare_procedures(proc_file, proc_db)
         self.assertTrue(actual) #Vagyis az eredmény nem üres lista
 
