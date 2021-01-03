@@ -140,13 +140,11 @@ def get_procedure_from_file(f, procname):
     :param procname:
     :return list of rows:
     """
-    dict_procnames = {}
     list_procname = []
     dict_procnames = get_blocks_of_file(f)
     for key in dict_procnames:
         if key == procname:
             list_procname = dict_procnames[key].copy()
-            #list_procname = dict_procnames.items()
     return list_procname
 
 def compare_procedures(proc_file, proc_db):
@@ -171,4 +169,16 @@ def compare_procedures(proc_file, proc_db):
     return diff
 
 if __name__ == '__main__':
-    print(is_separate("h el_ lo world", 2, 2))
+    f = open('testdata/stored_procs.sql', 'r')
+    procname = 'dbo.uspGetBillOfMaterials'
+    proc_file = get_procedure_from_file(f, procname)
+    f.close()
+    conn = connect_database()
+    proc_db = get_procedure_from_db(conn, procname)
+    actual = compare_procedures(proc_file, proc_db)
+    if actual:
+        print('Különbség van az adatbázisban és a fájlban a ' + procname + ' eljárásban:')
+        print('Fájl')
+        print(actual[0])
+        print('DB')
+        print(actual[1])
