@@ -1,9 +1,13 @@
 import unittest
 from MS_comparetool import *
 from database import Db
-
+from procfile import Procfile
 
 db = Db()
+
+
+
+
 class Test_test_comparetool(unittest.TestCase):
 
     def test_connect_database(self):
@@ -23,9 +27,8 @@ class Test_test_comparetool(unittest.TestCase):
 
     def test_get_blocks_of_file(self):
         #Írtam leírást a get_blocks_of_file eljáráshoz az elvárt működésről
-        f = open('testdata/stored_procs.sql', 'r')
-        res = get_blocks_of_file(f)
-        f.close()
+        f = Procfile('testdata/stored_procs.sql')
+        res = f.get_blocks(f)
         expected = ['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError']
         actual = [x for x in res]
         self.assertListEqual(expected, actual)
@@ -38,7 +41,6 @@ class Test_test_comparetool(unittest.TestCase):
         pass
 
     def test_get_procedure_from_db(self):
-
         conn = db.connect_database()
         proc_text = db.get_procedure('dbo.uspGetBillOfMaterials')
         actual = len(proc_text)
