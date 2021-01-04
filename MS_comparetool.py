@@ -1,26 +1,6 @@
 from database import Db
 from str1 import *
-
-class BlockError(Exception):
-    pass
-
-
-
-def get_procedure_from_file(f, procname):
-    """
-    Az eljárás ugyanúgy működik mint a get_procedure_from_db eljárás,
-    azonban nem adatbázisból hanem a kapott fájlból veszi ki a forrást
-    és visszaadja listában.
-    :param f:
-    :param procname:
-    :return list of rows:
-    """
-    list_procname = []
-    dict_procnames = get_blocks(f)
-    for key in dict_procnames:
-        if key == procname:
-            list_procname = dict_procnames[key].copy()
-    return list_procname
+from procfile import *
 
 def compare_procedures(proc_file, proc_db):
     """
@@ -47,7 +27,7 @@ if __name__ == '__main__':
     db = Db()
     f = open('testdata/stored_procs.sql', 'r')
     procname = 'dbo.uspGetBillOfMaterials'
-    proc_file = get_procedure_from_file(f, procname)
+    proc_file = Procfile.get_procedure_from_file(f, procname)
     f.close()
     conn = db.connect_database()
     proc_db = db.get_procedure(procname)
