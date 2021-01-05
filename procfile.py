@@ -4,10 +4,11 @@ class BlockError(Exception):
     pass
 
 class Procfile:
-	def __init__(self):
-		pass
+	def __init__(self, filename):
+		with open('testdata/stored_procs.sql', 'r') as f:
+			self.blocks = self.read_blocks_from_file(f)
 
-	def get_blocks(self, fh):
+	def read_blocks_from_file(self, fh):
 		# Ezt át kellene írni, hogy dictionary-t adjon vissza, ahol a kulcs a blokk neve,
 		# a hozzá tartozó érték, pedig a blokk tartalma listában
 		block_start_pattern = 'CREATE PROCEDURE'
@@ -37,18 +38,20 @@ class Procfile:
 			raise BlockError("Block has no end!")
 		return my_dict
 
-	def get_procedure(self, f, procname):
+	def get_procedure(self, procname):
 		"""
 		Az eljárás ugyanúgy működik mint a get_procedure_from_db eljárás,
 		azonban nem adatbázisból hanem a kapott fájlból veszi ki a forrást
 		és visszaadja listában.
-		:param f:
 		:param procname:
 		:return list of rows:
 		"""
 		list_procname = []
-		dict_procnames = self.get_blocks(f)
+		dict_procnames = self.blocks
 		for key in dict_procnames:
 			if key == procname:
 				list_procname = dict_procnames[key].copy()
 		return list_procname
+
+	def get_blocks(self):
+		return self.blocks

@@ -2,7 +2,7 @@ from database import Db
 from str1 import *
 from procfile import *
 
-def compare_procedures(proc_file, proc_db):
+def compare_two_list(proc_file, proc_db):
     """
     Az eljárás összehasonlítja a kapott két listát. Ha nincs különbség, akkor üres listát ad vissza.
     Különbség esetén két listaelemet ad vissza. Az első az első lista első eltérő sora,
@@ -25,13 +25,12 @@ def compare_procedures(proc_file, proc_db):
 
 if __name__ == '__main__':
     db = Db()
-    f = open('testdata/stored_procs.sql', 'r')
+    pf = Procfile('testdata/stored_procs.sql')
+
     procname = 'dbo.uspGetBillOfMaterials'
-    proc_file = Procfile.get_procedure_from_file(f, procname)
-    f.close()
-    conn = db.connect_database()
+    proc_file = pf.get_procedure(procname)
     proc_db = db.get_procedure(procname)
-    actual = compare_procedures(proc_file, proc_db)
+    actual = compare_two_list(proc_file, proc_db)
     if actual:
         print('Különbség van az adatbázisban és a fájlban a ' + procname + ' eljárásban:')
         print('Fájl')

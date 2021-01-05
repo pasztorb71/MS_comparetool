@@ -4,10 +4,7 @@ from database import Db
 from procfile import Procfile
 
 db = Db()
-procfile = Procfile()
-
-
-
+pf = Procfile('testdata/stored_procs.sql')
 
 class Test_test_comparetool(unittest.TestCase):
 
@@ -28,9 +25,7 @@ class Test_test_comparetool(unittest.TestCase):
 
     def test_get_blocks_of_file(self):
         #Írtam leírást a get_blocks_of_file eljáráshoz az elvárt működésről
-        f = open('testdata/stored_procs.sql')
-        res = procfile.get_blocks(f)
-        f.close()
+        res = pf.get_blocks()
         expected = ['dbo.uspGetBillOfMaterials', 'dbo.uspGetEmployeeManagers', 'dbo.uspLogError']
         actual = [x for x in res]
         self.assertListEqual(expected, actual)
@@ -50,20 +45,16 @@ class Test_test_comparetool(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_get_procedure_from_file(self):
-        f = open('testdata/stored_procs.sql', 'r')
-        proc_text = procfile.get_procedure(f, 'dbo.uspGetBillOfMaterials')
-        f.close()
+        proc_text = pf.get_procedure('dbo.uspGetBillOfMaterials')
         actual = len(proc_text)
         expected = 36
         self.assertEqual(expected, actual)
 
     def test_compare_procedures(self):
-        f = open('testdata/stored_procs.sql', 'r')
-        proc_file = procfile.get_procedure(f, 'dbo.uspGetBillOfMaterials')
-        f.close()
+        proc_file = pf.get_procedure('dbo.uspGetBillOfMaterials')
         conn = db.conn
         proc_db = db.get_procedure('dbo.uspGetBillOfMaterials')
-        actual = compare_procedures(proc_file, proc_db)
+        actual = compare_two_list(proc_file, proc_db)
         self.assertTrue(actual) #Vagyis az eredmény nem üres lista
 
 
